@@ -31,6 +31,7 @@ EOF
 # Clone BB customer template
 git clone $BB_TEMPLATE_REPO
 cd bb-template
+git checkout all-apps
 git checkout -b $GIT_BRANCH_NAME
 
 # Generate GPG if not present
