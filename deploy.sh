@@ -31,6 +31,8 @@ EOF
 # Clone BB customer template
 TEMPLATE_DIR="bb-template/"
 if [ -d "$TEMPLATE_DIR" ]; then
+  echo "$TEMPLATE_DIR exists!"
+else
   git clone $BB_TEMPLATE_REPO
 fi
 cd bb-template
