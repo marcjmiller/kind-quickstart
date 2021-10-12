@@ -5,7 +5,7 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
 ### Prerequisites
 - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [sops](https://github.com/mozilla/sops/releases)
+- [sops](https://github.com/mozilla/sops/releases) Use version 3.5
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 
