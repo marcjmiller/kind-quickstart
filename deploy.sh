@@ -29,12 +29,15 @@ data:
 EOF
 
 # Clone BB customer template
-git clone $BB_TEMPLATE_REPO
+TEMPLATE_DIR="bb-template/"
+if [ -d "$TEMPLATE_DIR" ]; then
+  git clone $BB_TEMPLATE_REPO
+fi
 cd bb-template
 git checkout -b $GIT_BRANCH_NAME
 
 # Generate GPG if not present
-if [ $fp -z ]
+if [ -z $fp ]
 then
   export fp=`gpg --quick-generate-key bigbang-sops rsa4096 encr | sed -e 's/ *//;2q;d;'`
   gpg --quick-add-key $fp rsa4096 encr
