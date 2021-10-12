@@ -1,11 +1,12 @@
+[[ _TOC_ ]]
 ### Kind QuickStart
 The purpose of this automation is to install BigBang onto a Kind cluster running on your local machine
 
 ### Prerequisites
-- Kind
-- kubectl
-- sops
-- git
+- [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [sops](https://github.com/mozilla/sops/releases)
+- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 
 ### Getting Started
@@ -16,3 +17,11 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
 - Run ```deploy.sh```
 - Set the branch name to a branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
 - To teardown run ```teardown.sh```
+
+
+### Troubleshooting
+If elasticsearch doesn't come up please do the following to give the image the minimum space it needs
+```bash
+sysctl -w vm.max_map_count=262144
+echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+```
