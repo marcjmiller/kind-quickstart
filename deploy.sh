@@ -1,7 +1,6 @@
 #!/bin/bash
 set -eux
 # Setup ENV Variables
-export BB_TEMPLATE_REPO=https://gitlab.com/cse5/cognition/bb-template.git
 export $(grep -v '^#' .env | xargs)
 
 # Start Kind Cluster
@@ -98,4 +97,3 @@ kubectl get deploy -o name -n flux-system | xargs -n1 -t kubectl rollout status 
 kubectl apply -f bigbang.yaml
 
 watch kubectl get hr,po -A
-
