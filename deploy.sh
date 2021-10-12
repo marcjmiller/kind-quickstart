@@ -57,7 +57,7 @@ git commit -m "chore: add bigbang.dev tls certificates"
 
 # Decrypt SOPS file to add in Registry One secrets
 sops -d secrets.enc.yaml > secrets.yaml
-sed -i "/values.yaml: |-/a \ \ \ \ \ \ \ \ registryCredentials:\n \ \ \ \ \ \ \ - registry: registry1.dso.mil\n \ \ \ \ \ \ \ \ \ username: $REGISTRY1_USERNAME\n \ \ \ \ \ \ \ \ \ password: $REGISTRY1_PASSWORD" secrets.yaml
+sed -i "/values.yaml: |-/a \ \ \ \ \ \ \ \ registryCredentials:\n \ \ \ \ \ \ \ - registry: registry1.dso.mil\n \ \ \ \ \ \ \ \ \ username: $REGISTRY1_USERNAME\n \ \ \ \ \ \ \ \ \ password: $REGISTRY1_CLI_SECRET" secrets.yaml
 sops -e secrets.yaml > secrets.enc.yaml
 
 rm -f secrets.yaml
@@ -86,7 +86,7 @@ gpg --export-secret-key --armor $fp | kubectl create secret generic sops-gpg --f
 
 kubectl create namespace flux-system
 
-kubectl create secret docker-registry private-registry --docker-server=registry1.dso.mil --docker-username=$REGISTRY1_USERNAME --docker-password=$REGISTRY1_PASSWORD -n flux-system
+kubectl create secret docker-registry private-registry --docker-server=registry1.dso.mil --docker-username=$REGISTRY1_USERNAME --docker-password=$REGISTRY1_CLI_SECRET -n flux-system
 
 kubectl create secret generic private-git --from-literal=username=$GIT_USERNAME --from-literal=password=$GIT_ACCESS_TOKEN -n bigbang
 
