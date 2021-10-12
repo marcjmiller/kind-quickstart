@@ -1,8 +1,9 @@
 #!/bin/bash
 # Setup ENV Variables
 export BB_TEMPLATE_REPO=https://gitlab.com/cse5/cognition/bb-template.git
+export $(grep -v '^#' .env | xargs)
 # Ask for branch name 
-read -p 'What would you like your branch to be called?' branchName
+read -p 'What would you like your branch to be called? ' branchName
 
 # Start Kind Cluster
 kind create cluster --name bigbang --config bigbang.yaml
