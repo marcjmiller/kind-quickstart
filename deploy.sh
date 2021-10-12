@@ -29,12 +29,7 @@ data:
 EOF
 
 # Clone BB customer template
-TEMPLATE_DIR="bb-template/"
-if [ -d "$TEMPLATE_DIR" ]; then
-  echo "$TEMPLATE_DIR exists!"
-else
-  git clone $BB_TEMPLATE_REPO
-fi
+git clone $BB_TEMPLATE_REPO
 cd bb-template
 git checkout -b $GIT_BRANCH_NAME
 
@@ -73,9 +68,9 @@ git commit -m "chore: adds iron bank pull credentials"
 # Configure GitOps w/ flux
 cd ../dev/
 
-sed -i "s/https://replace-with-your-git-repo.git/$BB_TEMPLATE_REPO" bigbang.yaml
+sed -i "s,https://replace-with-your-git-repo.git,$BB_TEMPLATE_REPO,g" bigbang.yaml
 
-sed -i "s/replace-with-your-branch/$GIT_BRANCH_NAME" bigbang.yaml
+sed -i "s/replace-with-your-branch/$GIT_BRANCH_NAME/g" bigbang.yaml
 
 git add bigbang.yaml
 git commit -m "chore: update git repo"
@@ -99,7 +94,7 @@ kustomize build https://repo1.dso.mil/platform-one/big-bang/bigbang.git//base/fl
 
 kubectl get deploy -o name -n flux-system | xargs -n1 -t kubectl rollout status -n flux-system
 
-kubectl apply -f ~/workspace/clusters/bb_template/dev/bigbang.yaml
+kubectl apply -f bigbang.yaml
 
 watch kubectl get hr,po -A
 
