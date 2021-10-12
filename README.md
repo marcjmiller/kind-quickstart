@@ -16,6 +16,31 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
   - Get a access [token](https://gitlab.com/-/profile/personal_access_tokens) from your gitlab account with api permissions
 - Run ```deploy.sh```
 - Set the branch name to a branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
+- Kiali will be the last service to come up, visit kiali.bigbang.dev 
+
+### Go into the dev folder and update your bb configuration
+```
+cd bb-template/dev/
+```
+#### Modify your configmap to enable a new service
+```yaml
+...
+twistlock:
+  enabled: false # Set to true
+  values:
+    console:
+      persistence:
+        size: 5Gi
+...
+```
+Push the new configuration and watch your cluster update all GitOps like
+```bash 
+git commit -am "enable twistlock"
+git push
+watch kubectl hr,po -A
+``` 
+
+### Cleanup
 - To teardown run ```teardown.sh```
 
 
