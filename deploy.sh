@@ -96,4 +96,4 @@ kubectl get deploy -o name -n flux-system | xargs -n1 -t kubectl rollout status 
 
 kubectl apply -f bigbang.yaml
 
-watch kubectl get hr,po -A
+watch kubectl get kustomizations,hr,po -A
