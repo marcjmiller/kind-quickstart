@@ -1,9 +1,8 @@
 #!/bin/bash
+set -eux
 # Setup ENV Variables
 export BB_TEMPLATE_REPO=https://gitlab.com/cse5/cognition/bb-template.git
 export $(grep -v '^#' .env | xargs)
-# Ask for branch name 
-read -p 'What would you like your branch to be called? ' branchName
 
 # Start Kind Cluster
 kind create cluster --name bigbang --config bigbang.yaml
@@ -32,18 +31,18 @@ EOF
 # Clone BB customer template
 git clone $BB_TEMPLATE_REPO
 cd bb-template
-git checkout -b $branchName
+git checkout -b $GIT_BRANCH_NAME
 
 # Generate GPG if not present
 if [ $fp -z ]
 then
   export fp=`gpg --quick-generate-key bigbang-sops rsa4096 encr | sed -e 's/ *//;2q;d;'`
-  gpg --quick-add-key ${fp} rsa4096 encr
-  gpg --quick-set-expire ${fp} 14d
+  gpg --quick-add-key $fp rsa4096 encr
+  gpg --quick-set-expire $fp 14d
 fi
 
 # Set fingerprint in .sops.yaml to encrypt files
-sed -i "s/pgp: FALSE_KEY_HERE/pgp: ${fp}/" .sops.yaml
+sed -i "s/pgp: FALSE_KEY_HERE/pgp: $fp/" .sops.yaml
 
 git add .sops.yaml
 git commit -m "chore: update default encryption key"
@@ -63,7 +62,7 @@ sops -e secrets.yaml > secrets.enc.yaml
 
 rm -f secrets.yaml
 
-git add secrets.yaml
+git add secrets.enc.yaml
 git commit -m "chore: adds iron bank pull credentials"
 
 # Configure GitOps w/ flux
@@ -71,19 +70,19 @@ cd ../dev/
 
 sed -i "s/https://replace-with-your-git-repo.git/$BB_TEMPLATE_REPO" bigbang.yaml
 
-sed -i "s/replace-with-your-branch/$branchName" bigbang.yaml
+sed -i "s/replace-with-your-branch/$GIT_BRANCH_NAME" bigbang.yaml
 
 git add bigbang.yaml
 git commit -m "chore: update git repo"
 
 # Push all configuration to your branch 
 
-git push -u origin $branchName
+git push -u origin $GIT_BRANCH_NAME
 
 # Install bigbang
 kubectl create namespace bigbang
 
-gpg --export-secret-key --armor ${fp} | kubectl create secret generic sops-gpg --from-file=bigbangkey.asc=/dev/stdin -n bigbang 
+gpg --export-secret-key --armor $fp | kubectl create secret generic sops-gpg --from-file=bigbangkey.asc=/dev/stdin -n bigbang 
 
 kubectl create namespace flux-system
 
