@@ -5,26 +5,27 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
 ### Prerequisites
 - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [sops](https://github.com/mozilla/sops/releases) Use version 3.5
+- [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+- [sops version 3.5.0](https://github.com/mozilla/sops/releases/tag/v3.5.0)
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 
 ### Getting Started
 - Create an env file from the example ```cp example.env .env```
 - Set environment variables in the .env file to fetch dependencies for bigbang and the git repo where your git ops configuration will live.
-  - Get your username and CLI Secret from [Registry1](registry1.dso.mil)  
+  - Get your username and CLI Secret from [Registry1](https://registry1.dso.mil) for REGISTRY1_USERNAME and REGISTRY1_PASSWORD
 ![Registry1Image](img/image2.png)
-![Registry1Image](img/image1.png)  
-  - Get a access [token](https://gitlab.com/-/profile/personal_access_tokens) from your gitlab account with api permissions.
+![Registry1Image](img/image1.png)
+  - Create an [access token](https://gitlab.com/-/profile/personal_access_tokens) from your gitlab account with api permissions and set your GIT_ACCESS_TOKEN to that.
 - Run ```deploy.sh```
-- Set the branch name to a branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
-- Kiali will be the last service to come up, visit kiali.bigbang.dev 
+- Set the GIT_BRANCH_NAME to a *new* branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
+- Kiali will be the last service to come up, visit kiali.bigbang.dev
 
 ### Go into the dev folder and update your bb configuration
 ```
 cd bb-template/dev/
 ```
-#### Modify your configmap to enable a new service
+#### Modify the `configmap.yaml` to enable a new service
 ```yaml
 ...
 twistlock:
@@ -36,11 +37,11 @@ twistlock:
 ...
 ```
 Push the new configuration and watch your cluster update all GitOps like
-```bash 
+```bash
 git commit -am "enable twistlock"
 git push
 watch kubectl hr,po -A
-``` 
+```
 
 ### Cleanup
 - To teardown run ```teardown.sh```
