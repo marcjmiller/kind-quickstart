@@ -34,7 +34,7 @@ cd bb-template
 git checkout -b $GIT_BRANCH_NAME
 
 # Generate GPG if not present
-if [ -z $fp ]
+if [ -z ${fp+x} ]
 then
   export fp=`gpg --quick-generate-key bigbang-sops rsa4096 encr | sed -e 's/ *//;2q;d;'`
   gpg --quick-add-key $fp rsa4096 encr
