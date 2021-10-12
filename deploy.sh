@@ -25,7 +25,7 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - $network.0.3-$network.0.4
+      - $network.0.2-$network.0.3
 EOF
 
 # Clone BB customer template
