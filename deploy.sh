@@ -30,20 +30,13 @@ EOF
 # Clone BB customer template
 git clone $BB_TEMPLATE_REPO
 cd bb-template
-git checkout all-apps
+# git checkout all-apps
 git checkout -b $GIT_BRANCH_NAME
 
 # Generate GPG if not present
 if [ -z ${fp+x} ]
 then
-  gpg --batch --gen-key <<EOF
-    %no-protection
-    Key-Type:RSA
-    Key-Length:4096
-    Name-Real: bigbang-sops
-    Expire-Date:0
-EOF
-
+  gpg --batch --gen-key ../gpg-key.cfg
   export fp=`gpg --list-keys | sed -e 's/ *//;4q;d;'`
 
   echo '' | gpg --pinentry-mode loopback --batch --no-tty --yes --passphrase-fd 0 --quick-add-key $fp rsa4096 encr
