@@ -36,8 +36,17 @@ git checkout -b $GIT_BRANCH_NAME
 # Generate GPG if not present
 if [ -z ${fp+x} ]
 then
-  export fp=`gpg --quick-generate-key bigbang-sops rsa4096 encr | sed -e 's/ *//;2q;d;'`
-  gpg --quick-add-key $fp rsa4096 encr
+  gpg --batch --gen-key <<EOF
+    %no-protection
+    Key-Type:RSA
+    Key-Length:4096
+    Name-Real: bigbang-sops
+    Expire-Date:0
+EOF
+
+  export fp=`gpg --list-keys | sed -e 's/ *//;4q;d;'`
+
+  echo '' | gpg --pinentry-mode loopback --batch --no-tty --yes --passphrase-fd 0 --quick-add-key $fp rsa4096 encr
   gpg --quick-set-expire $fp 14d
 fi
 
@@ -75,14 +84,14 @@ sed -i "s/replace-with-your-branch/$GIT_BRANCH_NAME/g" bigbang.yaml
 git add bigbang.yaml
 git commit -m "chore: update git repo"
 
-# Push all configuration to your branch 
+# Push all configuration to your branch
 
 git push -u origin $GIT_BRANCH_NAME
 
 # Install bigbang
 kubectl create namespace bigbang
 
-gpg --export-secret-key --armor $fp | kubectl create secret generic sops-gpg --from-file=bigbangkey.asc=/dev/stdin -n bigbang 
+gpg --export-secret-key --armor $fp | kubectl create secret generic sops-gpg --from-file=bigbangkey.asc=/dev/stdin -n bigbang
 
 kubectl create namespace flux-system
 
