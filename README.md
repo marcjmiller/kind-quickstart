@@ -3,12 +3,12 @@
 The purpose of this automation is to install BigBang onto a Kind cluster running on your local machine
 
 ### Prerequisites
-- [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
+- [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
 - [sops version 3.5.0](https://github.com/mozilla/sops/releases/tag/v3.5.0)
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-
+- [docker](https://docs.docker.com/engine/install/ubuntu/)
 
 ### Getting Started
 - Create an env file from the example ```cp example.env .env```
@@ -18,8 +18,8 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
 ![Registry1Image](img/image1.png)
   - Create an [access token](https://gitlab.com/-/profile/personal_access_tokens) from your gitlab account with api permissions and set your GIT_ACCESS_TOKEN to that.
 - Set the GIT_BRANCH_NAME to a *new* branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
-- Run ```deploy.sh```
-- Kiali will be the last service to come up, visit kiali.bigbang.dev
+- Run ```deploy.sh```, grab some coffee, it'll take around 10-15 minutes to complete
+- Kiali will be the last service to come up, visit http://kiali.bigbang.dev
 
 ### Go into the dev folder and update your bb configuration
 ```
@@ -45,7 +45,6 @@ watch kubectl hr,po -A
 
 ### Cleanup
 - To teardown run ```teardown.sh```
-
 
 ### Troubleshooting
 If elasticsearch doesn't come up please do the following to give the image the minimum space it needs
