@@ -133,9 +133,9 @@ function load_env_vars {
     export $(grep -v '^#' .env | xargs)
   fi
 
-  env_vars="REGISTRY1_USERNAME REGISTRY1_CLI_SECRET GIT_USERNAME GIT_ACCESS_TOKEN GIT_BRANCH_NAME BB_TEMPLATE_REPO"
+  env_vars=( REGISTRY1_USERNAME REGISTRY1_CLI_SECRET GIT_USERNAME GIT_ACCESS_TOKEN GIT_BRANCH_NAME BB_TEMPLATE_REPO )
 
-  for var in $env_vars; do
+  for var in "${env_vars[@]}"; do
     if [ -z $(printenv | grep $var) ]; then
       echo "Load env vars failed"
       echo "ERROR: $var not set, please review README.md"
@@ -145,9 +145,9 @@ function load_env_vars {
 }
 
 function preflight_check {
-  pre_reqs="kubectl kind kustomize docker git gpg sops"
+  pre_reqs=( kubectl kind kustomize docker git gpg sops )
 
-  for cmd in $pre_reqs; do
+  for cmd in "${pre_reqs[@]}"; do
     if [ ! $(command -v $cmd) ]; then
       echo "Preflight checks failed"
       echo "ERROR: $cmd not found, please install"
