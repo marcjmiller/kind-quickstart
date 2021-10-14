@@ -3,8 +3,6 @@
 set -e
 
 function main {
-  setup
-
   case "${1}" in
     -v|--verbose)
       set -ux
@@ -16,6 +14,7 @@ function main {
     ;;
   esac
 
+  setup
   create_cluster
   apply_bb_templates
   configure_secrets
@@ -129,21 +128,16 @@ function setup {
 }
 
 function load_env_vars {
-  if [ -f ".env" ]; then
+  ENV_FILE=./.env
+  if [ -f $ENV_FILE ]; then
     export $(grep -v '^#' .env | xargs)
   fi
 
-  env_vars=(
-    "REGISTRY1_USERNAME"
-    "REGISTRY1_CLI_SECRET"
-    "GIT_USERNAME"
-    "GIT_ACCESS_TOKEN"
-    "GIT_BRANCH_NAME"
-    "BB_TEMPLATE_REPO"
-  )
+  env_vars="REGISTRY1_USERNAME REGISTRY1_CLI_SECRET GIT_USERNAME GIT_ACCESS_TOKEN GIT_BRANCH_NAME BB_TEMPLATE_REPO"
 
   for var in $env_vars; do
-    if [ -z ${var+x} ]; then
+    if [ -z $(printenv | grep $var) ]; then
+      echo "Load env vars failed"
       echo "ERROR: $var not set, please review README.md"
       exit 1
     fi
@@ -151,9 +145,11 @@ function load_env_vars {
 }
 
 function preflight_check {
-  prereqs=("kubectl" "kind" "kustomize" "docker" "git" "gpg" "sops")
-  for cmd in $prereqs; do
+  pre_reqs="kubectl kind kustomize docker git gpg sops"
+
+  for cmd in $pre_reqs; do
     if [ ! $(command -v $cmd) ]; then
+      echo "Preflight checks failed"
       echo "ERROR: $cmd not found, please install"
       exit 1
     fi
