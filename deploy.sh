@@ -37,7 +37,7 @@ git checkout -b $GIT_BRANCH_NAME
 if [ -z ${fp+x} ]
 then
   gpg --batch --gen-key ../gpg-key.cfg
-  export fp=`gpg --list-keys | sed -e 's/ *//;4q;d;'`
+  export fp=`gpg --list-keys bigbang-sops | sed -e 's/ *//;2q;d;'`
 
   echo '' | gpg --pinentry-mode loopback --batch --no-tty --yes --passphrase-fd 0 --quick-add-key $fp rsa4096 encr
   gpg --quick-set-expire $fp 14d
