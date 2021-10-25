@@ -17,7 +17,7 @@ The purpose of this automation is to install BigBang onto a Kind cluster running
 ![Registry1Image](img/image2.png)
 ![Registry1Image](img/image1.png)
   - Create an [access token](https://gitlab.com/-/profile/personal_access_tokens) from your gitlab account with api permissions and set your GIT_ACCESS_TOKEN to that.
-- Set the GIT_BRANCH_NAME to a *new* branch you want your cluster to be managed from. This will be a branch on this [repo](https://gitlab.com/cse5/cognition/bb-template.git)
+- Set the GIT_BRANCH_NAME to a *new* branch you want your cluster to be managed from. This will be a branch on this [repo](https://code.il2.dso.mil/trash-pandas/bb-template)
 - Run ```deploy.sh```, grab some coffee, it'll take around 10-15 minutes to complete
 - Kiali will be the last service to come up, visit http://kiali.bigbang.dev
 
