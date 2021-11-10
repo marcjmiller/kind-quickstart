@@ -2,6 +2,8 @@
 
 set -e
 
+WAITING_ON_BIGBANG=0
+
 function main {
   case "${1}" in
     -v|--verbose)
@@ -119,6 +121,7 @@ function configure_gitops {
 function install_bigbang {
   kubectl apply -f bigbang.yaml
 
+  WAITING_ON_BIGBANG=1
   watch kubectl get kustomizations,hr,po -A
 }
 
@@ -154,6 +157,28 @@ function preflight_check {
       exit 1
     fi
   done
+}
+
+# On non-zero exit codes, cleanup after ourselves
+trap cleanup EXIT
+function cleanup {
+  if [ "$?" != "0" ]; then
+    echo -e "\nSomething broke, executing teardown..."
+    source teardown.sh
+  fi
+}
+
+# On ctrl-c exit, let the user know how to cleanup since it
+trap ctrlc 2
+function ctrlc {
+  echo -e "\nCaught ctrl-c"
+
+  if [ "$WAITING_ON_BIGBANG" -eq "1" ]; then
+    echo -e "\nUse ./teardown.sh to cleanup your bigbang, or it will happen automatically on non-zero exit codes."
+    exit 0
+  else
+    exit 1
+  fi
 }
 
 # silence pushd/popd default behaviors
