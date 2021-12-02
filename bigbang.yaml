@@ -1,11 +1,16 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+# Uncomment this block and replace `YOUR_IP_ADDRESS` with the output of `hostname -I | awk '{print $1}'`
+# networking:
+#   ipFamily: ipv6
+#   apiServerAddress: YOUR_IP_ADDRESS
+#   apiServerPort: 6443
 nodes:
   - role: control-plane
     kubeadmConfigPatches:
     - |
       kind:  InitConfiguration
-      nodeRegistration: 
+      nodeRegistration:
         kubeletExtraArgs:
           node-labels:  "ingress-ready=true"
     extraPortMappings:
@@ -15,6 +20,6 @@ nodes:
     - containerPort: 443
       hostPort: 443
       protocol: TCP
-  
-    
-    
+
+
+
