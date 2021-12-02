@@ -50,5 +50,19 @@ watch kubectl hr,po -A
 If elasticsearch doesn't come up please do the following to give the image the minimum space it needs
 ```bash
 sysctl -w vm.max_map_count=262144
-echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+```
+
+Similarly, fluentbit may enter crashLoopBackoff for an error `[TIMESTAMP] [error] [plugins/in_tail/tail_fs_inotify.c:305 errno=24] Too many open files`, the below are possible fixes for that
+```bash
+sysctl -w fs.inotify.max_user_instances=1500
+echo "fs.inotify.max_user_instances=1500" | sudo tee -a /etc/sysctl.conf
+```
+Also check for a low value set, and change as below
+```bash
+cat /proc/sys/fs/inotify/max_user_watches
+
+# If the value of the cmd above is low, then adjust like this
+sysctl -w fs.inotify.max_user_watches=525000
+echo "fs.inotify.max_user_watches=525000" | sudo tee -a /etc/sysctl.conf
 ```
