@@ -51,7 +51,7 @@ EOF
 }
 
 function apply_bb_templates {
-  git clone $BB_TEMPLATE_REPO
+  git clone --branch main $BB_TEMPLATE_REPO
   pushd bb-template
 
   # git checkout all-apps
