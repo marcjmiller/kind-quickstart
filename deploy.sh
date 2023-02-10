@@ -112,7 +112,7 @@ function configure_gitops {
   kubectl create namespace flux-system
 
   kubectl create secret docker-registry private-registry --docker-server=registry1.dso.mil --docker-username=$REGISTRY1_USERNAME --docker-password=$REGISTRY1_CLI_SECRET -n flux-system
-  kubectl apply -k https://repo1.dso.mil/platform-one/big-bang/bigbang.git//base/flux?ref=1.41.0
+  kubectl apply -k https://repo1.dso.mil/platform-one/big-bang/bigbang.git//base/flux?ref=1.53.0
 
   kubectl get deploy -o name -n flux-system | xargs -n1 -t kubectl rollout status -n flux-system
 }
