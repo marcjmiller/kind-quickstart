@@ -29,8 +29,7 @@ function create_cluster {
   kubectl create namespace bigbang
 
   # Install MetalLB
-  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.10.3/manifests/namespace.yaml
-  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.10.3/manifests/metallb.yaml
+  kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 
   # Grab Network used by kind and put it into the ConfigMap for metallb
   network=$(docker network inspect kind -f "{{(index .IPAM.Config 0).Subnet}}" | cut -d '.' -f1,2)
@@ -113,7 +112,7 @@ function configure_gitops {
   kubectl create namespace flux-system
 
   kubectl create secret docker-registry private-registry --docker-server=registry1.dso.mil --docker-username=$REGISTRY1_USERNAME --docker-password=$REGISTRY1_CLI_SECRET -n flux-system
-  kustomize build https://repo1.dso.mil/platform-one/big-bang/bigbang.git//base/flux?ref=1.12.0 | kubectl apply -f -
+  kubectl apply -k https://repo1.dso.mil/platform-one/big-bang/bigbang.git//base/flux?ref=1.41.0
 
   kubectl get deploy -o name -n flux-system | xargs -n1 -t kubectl rollout status -n flux-system
 }
